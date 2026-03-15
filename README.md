@@ -22,12 +22,14 @@ Reusable local LiteLLM proxy for multiple providers behind one OpenAI-compatible
 
 ## Prerequisites
 
-- Docker Desktop with `docker compose`
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) with `docker compose`
 - macOS with terminal access
 - Provider credentials for the models you plan to call
-- For local Qwen models: Ollama installed and running
+- For local Qwen models: [Ollama](https://ollama.com/) installed and running
 
 ## Setup
+
+*Note: Models and their aliases are defined in `config/config.yaml`. You may need to update model IDs there as provider versions change.*
 
 1. Create local env file:
 
@@ -62,7 +64,7 @@ brew install gitleaks
 ollama list | grep -E '^qwen3.5:(9b|27b)-256k[[:space:]]'
 ```
 
-If missing, create/setup those Ollama model aliases manually
+If missing, create/setup those Ollama model aliases manually (e.g., `ollama run qwen3.5:9b`).
 
 5. Start the proxy:
 
@@ -114,20 +116,21 @@ python examples/openai_client_example.py
 
 ## Phase 1 remote access (current recommendation)
 
-- Keep LiteLLM private on localhost only.
-- Use VPN-only remote access (for example Tailscale/WireGuard).
-- Do not forward LiteLLM ports from your router.
-- Keep `LITELLM_MASTER_KEY` rotated periodically and after major network changes.
+- Keeps LiteLLM private on localhost only.
+- Uses VPN-only remote access (for example Tailscale/WireGuard).
+- Does not forward LiteLLM ports from your router.
+- Keeps `LITELLM_MASTER_KEY` rotated periodically and after major network changes.
 
-## Phase 2 optional path (public exposure, still personal-use only)
+## Phase 2 optional path (Under Development: public exposure, still personal-use only)
 
-If you later want access without VPN, use an HTTPS gateway in front of LiteLLM and keep LiteLLM itself non-public:
+As a next step, I'm planning an optional path for access without a VPN. This future development will involve placing an HTTPS gateway in front of LiteLLM while keeping LiteLLM itself non-public. This upcoming architecture will include:
 
 - TLS termination + HTTP to HTTPS redirect
-- Identity enforcement for your account only (with MFA)
+- Identity enforcement for personal account only (with MFA)
 - Rate limits plus request size/time limits
 - Deny-by-default policy and alerting on repeated auth failures
 - Emergency lockout runbook (disable public route, rotate keys, restart)
+- Local telemetry & logging to a private PostgreSQL database to track session metadata (model used, token usage, latency, parameters) while strictly redacting or encrypting actual prompt and response content to maintain data privacy.
 
 ## Operations
 
@@ -158,3 +161,7 @@ All client shells/projects must use the new key value from `.env`.
 - This setup is intended for personal single-user use.
 - Update model IDs in `config/config.yaml` as provider versions change.
 - To upgrade LiteLLM securely, update the pinned image digest in `docker-compose.yml`.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
