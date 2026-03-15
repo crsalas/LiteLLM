@@ -1,0 +1,80 @@
+model_list:
+  - model_name: gpt-5-1-openai
+    litellm_params:
+      model: openai/gpt-5.1
+      api_key: os.environ/OPENAI_API_KEY
+
+  - model_name: gpt-5-mini-openai
+    litellm_params:
+      model: openai/gpt-5-mini
+      api_key: os.environ/OPENAI_API_KEY
+
+  - model_name: gpt-5-nano-openai
+    litellm_params:
+      model: openai/gpt-5-nano
+      api_key: os.environ/OPENAI_API_KEY
+
+  - model_name: gpt-4o-mini-openai
+    litellm_params:
+      model: openai/gpt-4o-mini
+      api_key: os.environ/OPENAI_API_KEY
+
+  - model_name: gpt-openai
+    litellm_params:
+      model: openai/gpt-4o-mini
+      api_key: os.environ/OPENAI_API_KEY
+
+  - model_name: claude-sonnet-4-6-anthropic
+    litellm_params:
+      model: anthropic/claude-sonnet-4-6
+      api_key: os.environ/ANTHROPIC_API_KEY
+
+  - model_name: claude-haiku-4-5-anthropic
+    litellm_params:
+      model: anthropic/claude-haiku-4-5
+      api_key: os.environ/ANTHROPIC_API_KEY
+
+  - model_name: gemini-3-flash-preview-api
+    litellm_params:
+      model: vertex_ai/gemini-3-flash-preview
+
+  - model_name: gemini-2-5-flash-api
+    litellm_params:
+      model: vertex_ai/gemini-2.5-flash
+
+  - model_name: gemini-2-5-flash-lite-api
+    litellm_params:
+      model: vertex_ai/gemini-2.5-flash-lite
+
+  - model_name: gemini-robotics-er-1-5-preview-api
+    litellm_params:
+      # Vertex AI docs do not currently list gemini-robotics-er-1.5-preview.
+      # Keep alias for compatibility; route it to an available Vertex model.
+      model: vertex_ai/gemini-2.5-flash
+
+  - model_name: qwen-local-3.5-9b-256k
+    litellm_params:
+      model: ollama/qwen3.5:9b-256k
+      api_base: http://host.docker.internal:11434
+      extra_body:
+        options:
+          num_ctx: 262144
+
+  - model_name: qwen-local-3.5-27b-256k
+    litellm_params:
+      model: ollama/qwen3.5:27b-256k
+      api_base: http://host.docker.internal:11434
+      extra_body:
+        options:
+          num_ctx: 262144
+
+  - model_name: qwen-embedding-local-8b
+    litellm_params:
+      model: ollama/qwen3-embedding:8b
+      api_base: http://host.docker.internal:11434
+
+litellm_settings:
+  drop_params: true
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
