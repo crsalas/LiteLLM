@@ -114,7 +114,7 @@ export OPENAI_API_KEY="$(grep '^LITELLM_MASTER_KEY=' .env | cut -d '=' -f 2-)"
 python examples/openai_client_example.py
 ```
 
-## Phase 1 remote access (current recommendation)
+## Phase 1 remote access (current)
 
 - Keeps LiteLLM private on localhost only.
 - Uses VPN-only remote access (for example Tailscale/WireGuard).
