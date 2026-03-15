@@ -46,12 +46,6 @@ model_list:
     litellm_params:
       model: vertex_ai/gemini-2.5-flash-lite
 
-  - model_name: gemini-robotics-er-1-5-preview-api
-    litellm_params:
-      # Vertex AI docs do not currently list gemini-robotics-er-1.5-preview.
-      # Keep alias for compatibility; route it to an available Vertex model.
-      model: vertex_ai/gemini-2.5-flash
-
   - model_name: qwen-local-3.5-9b-256k
     litellm_params:
       model: ollama/qwen3.5:9b-256k
