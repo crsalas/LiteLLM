@@ -1,0 +1,28 @@
+services:
+  litellm:
+    image: ghcr.io/berriai/litellm:v1.80.5-stable@sha256:e9711f484c7c8462c028803130afef546aa54c8d2fc11120242c01bbadc12e65
+    container_name: litellm-proxy
+    user: "${LITELLM_UID:-1000}:${LITELLM_GID:-1000}"
+    command: ["--config", "/app/config.yaml", "--port", "4000", "--host", "0.0.0.0"]
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+      - GOOGLE_APPLICATION_CREDENTIALS=/var/secrets/google/application_default_credentials.json
+    ports:
+      - "127.0.0.1:4000:4000"
+    volumes:
+      - ./config/config.yaml:/app/config.yaml:ro
+      - ${VERTEX_ADC_CREDENTIALS_PATH:-./.local/adc/application_default_credentials.json}:/var/secrets/google/application_default_credentials.json:ro
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    mem_limit: 1g
+    cpus: "1.0"
+    init: true
+    restart: unless-stopped
