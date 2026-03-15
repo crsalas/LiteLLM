@@ -130,7 +130,8 @@ As a next step, I'm planning an optional path for access without a VPN. This fut
 - Rate limits plus request size/time limits
 - Deny-by-default policy and alerting on repeated auth failures
 - Emergency lockout runbook (disable public route, rotate keys, restart)
-- Local telemetry & logging to a private PostgreSQL database to track session metadata (model used, token usage, latency, parameters) while strictly redacting or encrypting actual prompt and response content to maintain data privacy.
+- Local telemetry & logging to track session metadata (model used, token usage, latency, parameters).
+- Custom callbacks in LiteLLM to intercept and encrypt the actual prompts and responses before securely sending the logs to a locked-down custom API and database.
 
 ## Operations
 
