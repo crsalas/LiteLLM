@@ -8,11 +8,11 @@ client = OpenAI(
 )
 
 # Swap model aliases without changing client code:
-# gpt-openai, claude-sonnet-4-6-anthropic, claude-haiku-4-5-anthropic, gemini-3-flash-preview-api,
+# gpt-4o-mini-openai, claude-sonnet-4-6-anthropic, claude-haiku-4-5-anthropic, gemini-3-flash-preview-api,
 # gemini-2-5-flash-api, gemini-2-5-flash-lite-api, gemini-robotics-er-1-5-preview-api,
 # qwen-local-3.5-9b-256k, qwen-local-3.5-27b-256k
 resp = client.chat.completions.create(
-    model="gpt-openai",
+    model="gpt-4o-mini-openai",
     messages=[{"role": "user", "content": "Reply with: proxy is working"}],
 )
 
