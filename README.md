@@ -4,15 +4,15 @@ Reusable local LiteLLM proxy for multiple providers behind one OpenAI-compatible
 
 ## What this gives you
 
-- One endpoint for all supported providers: `http://127.0.0.1:4000/v1`
+- One endpoint for all supported providers: `http://127.0.0.1:<port>/v1`
 - One client contract for any project:
-  - `OPENAI_BASE_URL=http://127.0.0.1:4000/v1`
+  - `OPENAI_BASE_URL=http://127.0.0.1:<port>/v1`
   - `OPENAI_API_KEY=<LITELLM_MASTER_KEY>`
 - Stable model aliases for OpenAI, Anthropic, Gemini API, and local Ollama
 
 ## Security defaults in this repo
 
-- Local-only bind: `127.0.0.1:4000`
+- Local-only bind: `127.0.0.1:<port>`
 - Container runs as non-root host UID/GID
 - Pinned LiteLLM image by immutable digest
 - Read-only root filesystem + dropped Linux caps + no-new-privileges
