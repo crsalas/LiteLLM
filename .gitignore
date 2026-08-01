@@ -6,3 +6,5 @@
 .venv
 .vscode
 reference_docs/
+workbench-archival/
+local_models/**/*.gguf
