@@ -8,4 +8,4 @@
 reference_docs/
 workbench-archival/
 local_models/**/*.gguf
-PR/
+pr_messages/
