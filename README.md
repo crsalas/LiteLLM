@@ -2,13 +2,16 @@
 
 Reusable local LiteLLM proxy for multiple providers behind one OpenAI-compatible interface.
 
+Default Gemini auth uses `GEMINI_API_KEY`. Vertex AI via ADC remains available as
+an optional override for cases where you specifically need Vertex-backed models.
+
 ## What this gives you
 
 - One endpoint for all supported providers: `http://127.0.0.1:<port>/v1`
 - One client contract for any project:
   - `OPENAI_BASE_URL=http://127.0.0.1:<port>/v1`
   - `OPENAI_API_KEY=<LITELLM_MASTER_KEY>`
-- Stable model aliases for OpenAI, Anthropic, Gemini API, and local Ollama
+- Stable model aliases for OpenAI, Anthropic, Gemini API, and local llama.cpp
 
 ## Security defaults in this repo
 
@@ -25,7 +28,8 @@ Reusable local LiteLLM proxy for multiple providers behind one OpenAI-compatible
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) with `docker compose`
 - macOS with terminal access
 - Provider credentials for the models you plan to call
-- For local Qwen models: [Ollama](https://ollama.com/) installed and running
+- For local Qwen models: `llama-server` installed and available on `PATH`
+- For optional Vertex usage only: `gcloud` access plus ADC or a service account
 
 ## Setup
 
@@ -45,11 +49,19 @@ cp .env.example .env
   - `OPENAI_API_KEY`
   - `ANTHROPIC_API_KEY`
   - `GEMINI_API_KEY`
+- Default Gemini path:
+  - uses `GEMINI_API_KEY`
+  - does not require `gcloud auth application-default login`
 - Optional strict key enforcement:
   - `LITELLM_REQUIRED_PROVIDER_KEYS` (comma-separated)
   - Current template default: `OPENAI_API_KEY,ANTHROPIC_API_KEY,GEMINI_API_KEY`
   - If you do not use all providers, set only what you actively use
   - Example: `OPENAI_API_KEY,ANTHROPIC_API_KEY`
+- Optional Vertex path only:
+  - `VERTEXAI_PROJECT`
+  - `VERTEXAI_LOCATION`
+  - `VERTEX_ADC_CREDENTIALS_PATH`
+  - use only if you intentionally run the Vertex compose override
 
 3. Install secret scanner and git hooks (recommended):
 
@@ -58,13 +70,20 @@ brew install gitleaks
 ./scripts/install-hooks.sh
 ```
 
-4. If using Ollama Qwen models, ensure aliases already exist:
+4. Download the local Qwen model files once:
 
 ```bash
-ollama list | grep -E '^qwen3.5:(9b|27b)-256k[[:space:]]'
+(cd local_models/qwen3.5-setup && ./setup.sh)
+(cd local_models/qwen3.5-heretic-setup && ./setup.sh)
 ```
 
-If missing, create/setup those Ollama model aliases manually (e.g., `ollama run qwen3.5:9b`).
+Start the selected local model with its llama.cpp runner:
+
+```bash
+./local_models/qwen3.5-setup/run_llamacpp.sh
+```
+
+The runners currently use port `8080`; run one local model server at a time.
 
 5. Start the proxy:
 
@@ -85,6 +104,7 @@ If missing, create/setup those Ollama model aliases manually (e.g., `ollama run 
 - Run `./scripts/scan-secrets.sh` before commits (git-aware scan).
 - Run `./scripts/scan-secrets.sh --full` for strict local scans that include untracked files like `.env`.
 - `./scripts/logs.sh` should be used only during active troubleshooting because logs may include prompt/metadata content.
+- Prefer API-key auth for Gemini in the default local path to avoid mounting user ADC into the main proxy container.
 
 ## Phase 1 hardening checklist
 
@@ -113,6 +133,22 @@ export OPENAI_BASE_URL=http://127.0.0.1:4000/v1
 export OPENAI_API_KEY="$(grep '^LITELLM_MASTER_KEY=' .env | cut -d '=' -f 2-)"
 python examples/openai_client_example.py
 ```
+
+## Optional Vertex Path
+
+Default startup uses the Gemini API key path and does not mount ADC into the
+container.
+
+If you need Vertex-backed models instead, populate the optional Vertex values in
+`.env` and start LiteLLM with the override file:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.vertex.yml up -d
+./scripts/health.sh
+```
+
+The Vertex quick-reference commands remain in
+`reference_docs/GCLOUD_COMMANDS.md`.
 
 ## Phase 1 remote access (current)
 

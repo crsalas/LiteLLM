@@ -46,26 +46,19 @@ model_list:
     litellm_params:
       model: vertex_ai/gemini-2.5-flash-lite
 
-  - model_name: qwen-local-3.5-9b-256k
+  - model_name: qwen3.5-aggressive
     litellm_params:
-      model: ollama/qwen3.5:9b-256k
-      api_base: http://host.docker.internal:11434
-      extra_body:
-        options:
-          num_ctx: 262144
+      model: openai/qwen
+      api_base: http://host.docker.internal:8080/v1
+      api_key: sk-no-key-required
+      rpm_limit: 1000
 
-  - model_name: qwen-local-3.5-27b-256k
+  - model_name: qwen3.5-heretic
     litellm_params:
-      model: ollama/qwen3.5:27b-256k
-      api_base: http://host.docker.internal:11434
-      extra_body:
-        options:
-          num_ctx: 262144
-
-  - model_name: qwen-embedding-local-8b
-    litellm_params:
-      model: ollama/qwen3-embedding:8b
-      api_base: http://host.docker.internal:11434
+      model: openai/qwen
+      api_base: http://host.docker.internal:8080/v1
+      api_key: sk-no-key-required
+      rpm_limit: 1000
 
 litellm_settings:
   drop_params: true
