@@ -1,6 +1,6 @@
 services:
   litellm:
-    image: ghcr.io/berriai/litellm:v1.80.5-stable@sha256:e9711f484c7c8462c028803130afef546aa54c8d2fc11120242c01bbadc12e65
+    image: ghcr.io/berriai/litellm:v1.84.0@sha256:29252f25ed1b538d44f6b76ec97412c5537a180b39ede744b9f3e86ffdd278f5
     container_name: litellm-proxy
     user: "${LITELLM_UID:-1000}:${LITELLM_GID:-1000}"
     command: ["--config", "/app/config.yaml", "--port", "4000", "--host", "0.0.0.0"]
